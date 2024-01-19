@@ -1,10 +1,21 @@
 #include <iostream>
 
+void modifyInt(int& a, int b) {
+    a = b;
+}
+
 int main() {
-    int* p = new int[3];
-    p[0] = 1;
-    p[1] = 2;
-    p[2] = 3;
-    std::cout << *(&p[0]) << *(&p[1]) << *(&p[2]) << std::endl;
+    typedef struct Rectangle {
+        int length;
+        int width;
+    } Rect;
+
+    Rect* r = new Rect {5, 3};
+    modifyInt(r->length, 6);
+    std::cout << r->length << std::endl;
+
+    enum class Color { red, blue, green };
+    Color c = Color::red;
+    std::cout << static_cast<std::underlying_type<Color>::type>(c) << std::endl;
     return 0;
 }
