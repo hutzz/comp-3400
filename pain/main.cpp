@@ -1,4 +1,5 @@
 #include <iostream>
+#include "Triangle.h"
 
 void modifyInt(int& a, int b) {
     a = b;
@@ -17,5 +18,9 @@ int main() {
     enum class Color { red, blue, green };
     Color c = Color::red;
     std::cout << static_cast<std::underlying_type<Color>::type>(c) << std::endl;
+
+    Triangle t(5, 4);
+    std::cout << t.getBase() << "\n";
+
     return 0;
 }
