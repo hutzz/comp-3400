@@ -60,7 +60,7 @@ std::istream& operator>>(std::istream& is, card_suit& s) {
             case 'D': s = card_suit::diamonds; break;
             case 'S': s = card_suit::spades; break;
             case 'C': s = card_suit::clubs; break;
-            default: is.setstate(std::ios_base::failbit); break;
+            default: is.setstate(std::ios_base::failbit);
         } 
     } else {
         is.setstate(std::ios_base::failbit);
@@ -90,7 +90,7 @@ std::istream& operator>>(std::istream& is, card_face& f) {
                 case 'Q': f = card_face::queen; break;
                 case 'K': f = card_face::king; break;
                 case 'A': f = card_face::ace; break;
-                default: is.setstate(std::ios_base::failbit); break;
+                default: is.setstate(std::ios_base::failbit);
             }
         }
     } else {
