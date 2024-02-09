@@ -19,8 +19,8 @@ int main() {
     Color c = Color::red;
     std::cout << static_cast<std::underlying_type<Color>::type>(c) << std::endl;
 
-    Triangle t(5, 4);
-    std::cout << t.getBase() << "\n";
+    // Triangle t(5, 4);
+    // std::cout << t.getBase() << "\n";
 
     return 0;
 }
