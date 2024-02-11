@@ -139,7 +139,7 @@ cards generate_different_deck() {
 
 std::ostream& operator<<(std::ostream& os, cards const& d) {
     for (const card& c : d) {
-        os << c.face << c.suit << ' ';
+        os << c << ' ';
     }
     return os;
 }
@@ -196,4 +196,5 @@ std::ostream& info(std::ostream& os, const cards& cs) {
 int main() {
     info(std::cout, generate_full_deck());
     info(std::cout, generate_different_deck());
+    return 0;
 }
