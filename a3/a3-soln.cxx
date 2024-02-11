@@ -160,11 +160,15 @@ cards select_n(cards const& cs, std::size_t n) {
 }
 
 std::size_t aces_low_total(const cards& cs) {
-    return std::accumulate(cs.begin(), cs.end(), 0U, [](std::size_t partial_sum, const card& c) { return partial_sum + ((c.face == card_face::jack || c.face == card_face::queen || c.face == card_face::king) ? 10 : std::underlying_type<card_face>::type(c.face)); });
+    return std::accumulate(cs.begin(), cs.end(), 0U, [](std::size_t partial_sum, const card& c) { 
+        return partial_sum + ((c.face == card_face::jack || c.face == card_face::queen || c.face == card_face::king) ? 10 : std::underlying_type<card_face>::type(c.face)); 
+    });
 }
 
 std::size_t aces_high_total(const cards& cs) {
-    return std::accumulate(cs.begin(), cs.end(), 0U, [](std::size_t partial_sum, const card& c) { return partial_sum + ((c.face == card_face::ace || c.face == card_face::jack || c.face == card_face::queen || c.face == card_face::king) ? 10 : std::underlying_type<card_face>::type(c.face)); });
+    return std::accumulate(cs.begin(), cs.end(), 0U, [](std::size_t partial_sum, const card& c) { 
+        return partial_sum + ((c.face == card_face::ace || c.face == card_face::jack || c.face == card_face::queen || c.face == card_face::king) ? 10 : std::underlying_type<card_face>::type(c.face)); 
+    });
 }
 
 std::ostream& info(std::ostream& os, const cards& cs) {
