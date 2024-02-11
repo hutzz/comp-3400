@@ -18,102 +18,102 @@ struct all_card_suits_begin_t final { };
 constexpr all_card_suits_begin_t all_card_suits_begin{};
 
 class all_card_faces_iterator {
-    private:
-        std::optional<card_face> f_;
-    public:
-        using value_type = card_face const;
-        using reference = value_type&;
-        using difference_type = std::ptrdiff_t;
-        using iterator_category = std::input_iterator_tag;
+private:
+    std::optional<card_face> f_;
+public:
+    using value_type = card_face const;
+    using reference = value_type&;
+    using difference_type = std::ptrdiff_t;
+    using iterator_category = std::input_iterator_tag;
 
-        all_card_faces_iterator() = default;
-        all_card_faces_iterator(all_card_faces_begin_t) : f_(card_face::ace) {};
-        all_card_faces_iterator(const all_card_faces_iterator&) = default;
-        all_card_faces_iterator& operator=(const all_card_faces_iterator&) = default;
-        std::strong_ordering operator<=> (const all_card_faces_iterator&) const noexcept = default;
+    all_card_faces_iterator() = default;
+    all_card_faces_iterator(all_card_faces_begin_t) : f_(card_face::ace) {};
+    all_card_faces_iterator(const all_card_faces_iterator&) = default;
+    all_card_faces_iterator& operator=(const all_card_faces_iterator&) = default;
+    std::strong_ordering operator<=> (const all_card_faces_iterator&) const noexcept = default;
 
-        reference operator*() const {
-            return *f_;
-        }
-        all_card_faces_iterator operator++(int) {
-            all_card_faces_iterator tmp(*this);
-            this->operator++();
-            return tmp;
-        }
-        all_card_faces_iterator& operator++() {
-            if (f_.has_value()) {
-                if (f_ == card_face::king) {
-                    f_ = std::nullopt;
-                } else {
-                    using int_type = std::underlying_type<card_face>::type;
-                    auto f_value = static_cast<int_type>(*f_);
-                    f_value++;
-                    f_ = static_cast<card_face>(f_value);
-                }
+    reference operator*() const {
+        return *f_;
+    }
+    all_card_faces_iterator operator++(int) {
+        all_card_faces_iterator tmp(*this);
+        this->operator++();
+        return tmp;
+    }
+    all_card_faces_iterator& operator++() {
+        if (f_.has_value()) {
+            if (f_ == card_face::king) {
+                f_ = std::nullopt;
+            } else {
+                using int_type = std::underlying_type<card_face>::type;
+                auto f_value = static_cast<int_type>(*f_);
+                f_value++;
+                f_ = static_cast<card_face>(f_value);
             }
-            return *this;
         }
+        return *this;
+    }
 }; 
 static_assert(std::input_iterator<all_card_faces_iterator>);
 
 class all_card_faces {
-    public:
-        all_card_faces_iterator begin() const {
-            return all_card_faces_iterator{all_card_faces_begin};
-        }
-        all_card_faces_iterator end() const {
-            return all_card_faces_iterator{};
-        }
+public:
+    all_card_faces_iterator begin() const {
+        return all_card_faces_iterator{all_card_faces_begin};
+    }
+    all_card_faces_iterator end() const {
+        return all_card_faces_iterator{};
+    }
 };
 static_assert(std::ranges::range<all_card_faces>);
 
 class all_card_suits_iterator {
-    private:
-        std::optional<card_suit> s_;
-    public:
-        using value_type = card_suit const;
-        using reference = value_type&;
-        using difference_type = std::ptrdiff_t;
-        using iterator_category = std::input_iterator_tag;
-        
-        all_card_suits_iterator() = default;
-        all_card_suits_iterator(all_card_suits_begin_t) : s_(card_suit::clubs) {};
-        all_card_suits_iterator(const all_card_suits_iterator&) = default;
-        all_card_suits_iterator& operator=(const all_card_suits_iterator&) = default;
-        std::strong_ordering operator<=> (const all_card_suits_iterator&) const noexcept = default;
+private:
+    std::optional<card_suit> s_;
+public:
+    using value_type = card_suit const;
+    using reference = value_type&;
+    using difference_type = std::ptrdiff_t;
+    using iterator_category = std::input_iterator_tag;
+    
+    all_card_suits_iterator() = default;
+    all_card_suits_iterator(all_card_suits_begin_t) : s_(card_suit::clubs) {};
+    all_card_suits_iterator(const all_card_suits_iterator&) = default;
+    all_card_suits_iterator& operator=(const all_card_suits_iterator&) = default;
+    std::strong_ordering operator<=> (const all_card_suits_iterator&) const noexcept = default;
 
-        reference operator*() const {
-            return *s_;
-        }
-        all_card_suits_iterator& operator++() {
-            if (s_.has_value()) {
-                if (s_ == card_suit::diamonds) {
-                    s_ = std::nullopt;
-                } else {
-                    using int_type = std::underlying_type<card_suit>::type;
-                    auto f_value = static_cast<int_type>(*s_);
-                    f_value++;
-                    s_ = static_cast<card_suit>(f_value);
-                }
+    reference operator*() const {
+        return *s_;
+    }
+    all_card_suits_iterator& operator++() {
+        if (s_.has_value()) {
+            if (s_ == card_suit::diamonds) {
+                s_ = std::nullopt;
+            } else {
+                using int_type = std::underlying_type<card_suit>::type;
+                auto f_value = static_cast<int_type>(*s_);
+                f_value++;
+                s_ = static_cast<card_suit>(f_value);
             }
-            return *this;
         }
-        all_card_suits_iterator operator++(int) {
-            all_card_suits_iterator tmp(*this);
-            this->operator++();
-            return tmp;
-        }
+        return *this;
+    }
+    all_card_suits_iterator operator++(int) {
+        all_card_suits_iterator tmp(*this);
+        this->operator++();
+        return tmp;
+    }
 }; 
 static_assert(std::input_iterator<all_card_suits_iterator>);
 
 class all_card_suits {
-    public:
-        all_card_suits_iterator begin() const {
-            return all_card_suits_iterator{all_card_suits_begin};
-        }
-        all_card_suits_iterator end() const {
-            return all_card_suits_iterator{};
-        }
+public:
+    all_card_suits_iterator begin() const {
+        return all_card_suits_iterator{all_card_suits_begin};
+    }
+    all_card_suits_iterator end() const {
+        return all_card_suits_iterator{};
+    }
 };
 
 cards generate_full_deck() {
