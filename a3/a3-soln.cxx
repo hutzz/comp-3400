@@ -172,17 +172,17 @@ std::ostream& info(std::ostream& os, const cards& cs) {
     bool found_hand_without_ace = false;
     
     os << "cards: " << cs << '\n';
-    os << " # cards: " << cs.size() << '\n';
-    os << " # red cards: " << std::count_if(cs.begin(), cs.end(), is_red) << '\n';
-    os << " # club suit cards: " << std::count_if(cs.begin(), cs.end(), is_club) << '\n';
-    os << " # of 10-on-face cards: " << std::count_if(cs.begin(), cs.end(), [](const card& c) { return c.face == card_face::ten; }) << '\n';
-    os << " # of 3-on-face cards: " << std::count_if(cs.begin(), cs.end(), [](const card& c) { return c.face == card_face::three; }) << '\n' << '\n';
+    os << "  # cards: " << cs.size() << '\n';
+    os << "  # red cards: " << std::count_if(cs.begin(), cs.end(), is_red) << '\n';
+    os << "  # club suit cards: " << std::count_if(cs.begin(), cs.end(), is_club) << '\n';
+    os << "  # of 10-on-face cards: " << std::count_if(cs.begin(), cs.end(), [](const card& c) { return c.face == card_face::ten; }) << '\n';
+    os << "  # of 3-on-face cards: " << std::count_if(cs.begin(), cs.end(), [](const card& c) { return c.face == card_face::three; }) << '\n' << '\n';
 
     while (!found_hand_with_ace && !found_hand_without_ace) {
         auto hand = select_n(cs, 7);
-        os << " sample hand: " << hand << '\n';
-        os << " total (A == 1, JQK == 10): " << aces_low_total(hand) << '\n';
-        os << " total (AJQK == 10): " << aces_high_total(hand) << '\n' << '\n';
+        os << "  sample hand: " << hand << '\n';
+        os << "    total (A == 1, JQK == 10): " << aces_low_total(hand) << '\n';
+        os << "    total (AJQK == 10): " << aces_high_total(hand) << '\n' << '\n';
         found_hand_with_ace = found_hand_with_ace || std::any_of(hand.begin(), hand.end(), [](const card& c) { return c.face == card_face::ace; });
         found_hand_without_ace = found_hand_without_ace || std::none_of(hand.begin(), hand.end(), [](const card& c) { return c.face != card_face::ace; });
     }
