@@ -13,7 +13,6 @@ public:
     static cache_type cache;
 
     ret_type operator()(std::intmax_t const m, std::intmax_t const n) const {
-        ackermann a;
         if (m == 0) {
             return n + 1;
         } else if (m > 0 && n == 0) {
@@ -21,7 +20,7 @@ public:
             if (cache.find(key) != cache.end()) {
                 return cache[key];
             } else {
-                cache[key] = a(m - 1, 1);
+                cache[key] = (*this)(m - 1, 1);
                 return cache[key];
             }
         } else {
@@ -31,12 +30,12 @@ public:
                 if (cache.find(outerKey) != cache.end()) {
                     return cache[outerKey];
                 } else {
-                    cache[outerKey] = a(m - 1, cache[innerKey]);
+                    cache[outerKey] = (*this)(m - 1, cache[innerKey]);
                     return cache[outerKey];
                 }
             } else {
-                cache[innerKey] = a(m, n - 1);
-                cache[std::make_tuple(m - 1, cache[innerKey])] = a(m - 1, cache[innerKey]);
+                cache[innerKey] = (*this)(m, n - 1);
+                cache[std::make_tuple(m - 1, cache[innerKey])] = (*this)(m - 1, cache[innerKey]);
                 return cache[std::make_tuple(m - 1, cache[innerKey])];
             }
         }
