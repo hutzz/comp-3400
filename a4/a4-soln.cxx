@@ -13,32 +13,20 @@ public:
     static cache_type cache;
 
     ret_type operator()(std::intmax_t const m, std::intmax_t const n) const {
-        if (m == 0) {
+        ret_type result;
+        if (auto it = cache.find(args_type{m, n}); it != cache.end())
+            return it->second;
+        if (m == 0)
             return n + 1;
-        } else if (m > 0 && n == 0) {
-            auto key = std::make_tuple(m - 1, 1);
-            if (cache.find(key) != cache.end()) {
-                return cache[key];
-            } else {
-                cache[key] = (*this)(m - 1, 1);
-                return cache[key];
-            }
-        } else {
-            auto innerKey = std::make_tuple(m, n - 1);
-            if (cache.find(innerKey) != cache.end()) {
-                auto outerKey = std::make_tuple(m - 1, cache[innerKey]);
-                if (cache.find(outerKey) != cache.end()) {
-                    return cache[outerKey];
-                } else {
-                    cache[outerKey] = (*this)(m - 1, cache[innerKey]);
-                    return cache[outerKey];
-                }
-            } else {
-                cache[innerKey] = (*this)(m, n - 1);
-                cache[std::make_tuple(m - 1, cache[innerKey])] = (*this)(m - 1, cache[innerKey]);
-                return cache[std::make_tuple(m - 1, cache[innerKey])];
-            }
+        else if (m > 0 && n == 0)
+            result = (*this)(m - 1, 1);
+        else {
+            ret_type inner = (*this)(m, n - 1);
+            cache[args_type{m, n}] = inner;
+            result = (*this)(m - 1, inner);
         }
+        cache[args_type{m, n}] = result;
+        return result;
     }
 };
 ackermann::cache_type ackermann::cache;
@@ -48,7 +36,6 @@ int main() {
     using namespace chrono;
 
     ackermann a;
-    auto start_time = high_resolution_clock::now();
 
     for (int m = 0; m != 5; ++m) {
         cout << "m = " << m << ": ";
@@ -59,8 +46,4 @@ int main() {
         }
         cout << '\n';
     }
-    
-    auto end_time = high_resolution_clock::now();
-    auto duration = duration_cast<microseconds>(end_time - start_time);
-    cout << "\nTime taken: " << duration.count() / 1000 << " ms\n";
 }
