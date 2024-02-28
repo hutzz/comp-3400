@@ -5,13 +5,12 @@
 #include <chrono>
 
 class ackermann {
-public:
+private:
     using ret_type = std::intmax_t;
     using args_type = std::tuple<std::intmax_t, std::intmax_t>;
     using cache_type = std::map<args_type, ret_type>;
-
     static cache_type cache;
-
+public:
     ret_type operator()(std::intmax_t const m, std::intmax_t const n) const {
         ret_type result;
         if (auto it = cache.find(args_type{m, n}); it != cache.end())
