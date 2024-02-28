@@ -2,7 +2,6 @@
 #include <cstdint>
 #include <tuple>
 #include <map>
-#include <chrono>
 
 class ackermann {
 private:
@@ -32,7 +31,6 @@ ackermann::cache_type ackermann::cache;
 
 int main() {
     using namespace std;
-    using namespace chrono;
 
     ackermann a;
 
