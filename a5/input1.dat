@@ -1,0 +1,12 @@
+integer -5
+fltpt 3.14
+string "This is some text."
+integer 0
+integer 10
+integer 1000
+fltpt -1.34e-8
+string "dsadsadsa" 
+string "Hello World!" 
+fltpt 9.1e15
+string "This is cool." 
+
