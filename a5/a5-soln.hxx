@@ -37,6 +37,7 @@ std::istream& operator>>(std::istream& is, many& m) {
                 if (long long integer; is >> integer) {
                     m = integer;
                 } else {
+                    // these setstates are a bit redundant given the one at the end, but I wanted to make sure I precisely followed the instructions for this part
                     is.setstate(std::ios_base::failbit);
                 }
             } else if (word == "fltpt") {
