@@ -22,9 +22,9 @@ using many = std::variant<std::monostate, long long, double, special>;
 std::ostream& operator<<(std::ostream& os, many const& m) {
     auto idx = m.index();
     switch (idx) {
-        case 1: std::cout << "integer " << std::get<1>(m) << " "; break;
-        case 2: std::cout << "fltpt " << std::get<2>(m) << " "; break;
-        case 3: std::cout << "string " << std::get<3>(m) << " "; break;
+        case 1: return os << "integer " << std::get<1>(m) << " "; break;
+        case 2: return os << "fltpt " << std::get<2>(m) << " "; break;
+        case 3: return os << "string " << std::get<3>(m) << " "; break;
         default: break;
     }
     return os;
