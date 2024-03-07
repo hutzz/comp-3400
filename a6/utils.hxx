@@ -79,7 +79,7 @@ inline auto& zero(T (&object)[N]) noexcept {
 
 template <typename T, std::size_t N>
 requires zero_initializable<T>
-inline auto&& zero(T (&&object)[N]) {
+inline auto&& zero(T (&&object)[N]) noexcept {
     std::memset(object, 0, sizeof(T[N]));
     return std::move(object);
 }
