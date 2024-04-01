@@ -17,8 +17,7 @@ concept same_type =
 ;
 
 template <typename T, typename MapT = std::unordered_map<T,std::size_t>>
-class histogram_reducer
-{
+class histogram_reducer {
 public:
     using value_type = T;
     using histogram_type = MapT;
@@ -82,6 +81,43 @@ public:
         return histogram_reducer(std::forward<A>(a), std::forward<B>(b));
     }
 
+    histogram_reducer(histogram_reducer& h, internal_t) : histogram_reducer(std::move(h)) {}
+
+    histogram_reducer(histogram_reducer&& h, internal_t) : histogram_reducer(std::move(h)) {}
+
+    void process(value_type&& v) {
+        ++hist_.emplace(std::move(v),0).first->second;
+    }
+
+    void process(histogram_reducer&& h) {
+        if (h.hist_.empty()) {
+            return;
+        } else if (hist_.size() < h.hist_.size()) {
+            hist_.swap(h);
+        }
+        process_nodes(std::move(h));
+    }
+
+    void process_nodes(histogram_reducer&& h) {
+        if constexpr(
+            requires { typename histogram_type::allocator_type; } &&
+            std::allocator_traits<typename histogram_type::allocator_type>
+            ::is_always_equal::value
+        ) {
+            auto from = h.hist_.begin();
+            auto from_end = h.hist_.end();
+            for (auto next_f = from; from != from_end; from = next_f) {
+                ++next_f;
+                auto extracted = h.hist_.extract(from);
+                auto result = hist_.insert(std::move(extracted));
+                if (!result.inserted) {
+                    result.position->second += result.node.mapped();
+                }
+            }
+        } else {
+            process(std::move(h));
+        }
+    }
 };
 
 int main(int argc, char* argv[]) {
