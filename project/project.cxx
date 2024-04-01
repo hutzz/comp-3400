@@ -8,7 +8,6 @@
 #include <unordered_map>
 #include "benchmark.hxx"
 
-
 template <typename A, typename B>
 concept same_type =
   std::same_as<
@@ -38,32 +37,51 @@ private:
     struct internal_t final { };
     static constexpr internal_t internal{};
 
-    histogram_reducer(histogram_reducer const& h, internal_t);
+    histogram_reducer(histogram_reducer const& h, internal_t) : histogram_reducer(h) {};
 
 private:
-    void process(value_type const& v);
-    void process(histogram_reducer const& h);
+    void process(value_type const& v) {
+        ++hist_.emplace(v,0).first->second;
+    }
+    void process(histogram_reducer const& h) {
+        for (const auto& item : h.hist_) {
+            hist_[item.first] += item.second;
+        }
+    }
 
 public:
     template <same_type<value_type> A>
-    histogram_reducer(A&& a);
+    histogram_reducer(A&& a) : hist_() {
+        process(std::forward<A>(a));
+    }
     
     template <same_type<value_type> A, same_type<value_type> B>
-    histogram_reducer(A&& a, B&& b);
+    histogram_reducer(A&& a, B&& b) : histogram_reducer(std::forward<A>(a), internal) {
+        process(std::forward<B>(b));
+    }
 
     template <same_type<value_type> A, same_type<histogram_reducer> B>
-    histogram_reducer(A&& a, B&& b);
+    histogram_reducer(A&& a, B&& b) : histogram_reducer(std::forward<B>(b), internal) {
+        process(std::forward<A>(a));
+    }
 
     template <same_type<histogram_reducer> A, same_type<value_type> B>
-    histogram_reducer(A&& a, B&& b);
+    histogram_reducer(A&& a, B&& b) : histogram_reducer(std::forward<B>(b), std::forward<A>(a)) {}
 
     template <same_type<histogram_reducer> A, same_type<histogram_reducer> B>
-    histogram_reducer(A&& a, B&& b);
+    histogram_reducer(A&& a, B&& b) : histogram_reducer(std::forward<A>(a), internal) {
+        process(std::forward<B>(b));
+    }
     
-    histogram_type const& get() const;
+    histogram_type const& get() const {
+        return hist_;
+    }
 
     template <typename A, typename B>
-    histogram_reducer operator()(A&& a, B&& b) const;
+    histogram_reducer operator()(A&& a, B&& b) const {
+        return histogram_reducer(std::forward<A>(a), std::forward<B>(b));
+    }
+
 };
 
 int main(int argc, char* argv[]) {
@@ -113,20 +131,15 @@ int main(int argc, char* argv[]) {
     std::cout << "computing histogram... " << '\n';
     std::cout.flush();
     benchmark<> bench2;
-    // auto const& reduce = std::reduce(std::execution::par_unseq, v.begin(), v.end(), histogram_reducer<int>{},
-    //     [](const histogram_reducer<int>& a, const histogram_reducer<int>& b) {
-    //         histogram_reducer<int> result(a);
-    //         result.process(b);
-    //         return result;
-    //     });
-    // std::cout << elapsed << " seconds elapsed\n";
-    // std::cout << "  computed number of bins: " << reduce.get().size();
-    // std::size_t sum;
-    // for (const auto& item : reduce.get()) {
-    //     sum += item.second;
-    // }
-    // std::cout << "  number of values: " << sum << '\n';
-    // (sum == v.size()) ? std::cout << "  values check: passed\n" : std::cout << "  values check: FAILED\n";
+    auto const& reduce = std::reduce(std::execution::par_unseq, v.begin(), v.end(), histogram_reducer<int>{}, histogram_reducer<int>{});
+    std::cout << bench2.elapsed() << " seconds elapsed\n";
+    std::cout << "  computed number of bins: " << reduce.get().size() << '\n';
+    std::size_t sum = 0;
+    for (const auto& item : reduce.get()) {
+        sum += item.second;
+    }
+    std::cout << "  number of values: " << sum << '\n';
+    (sum == v.size()) ? std::cout << "  values check: passed\n" : std::cout << "  values check: FAILED\n";
 
     return 0;
 }
