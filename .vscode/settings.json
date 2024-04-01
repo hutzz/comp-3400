@@ -66,6 +66,7 @@
         "variant": "cpp",
         "format": "cpp",
         "filesystem": "cpp",
-        "ranges": "cpp"
+        "ranges": "cpp",
+        "csignal": "cpp"
     }
 }
