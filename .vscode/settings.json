@@ -67,6 +67,8 @@
         "format": "cpp",
         "filesystem": "cpp",
         "ranges": "cpp",
-        "csignal": "cpp"
+        "csignal": "cpp",
+        "thread": "cpp",
+        "execution": "cpp"
     }
 }
